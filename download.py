@@ -76,7 +76,9 @@ def parse_html(html, size):
     else:
         nextURL = str(soup.findAll('link', {"rel": "next"}))
         regex = re.compile("href=\"(.*?)\"")
-        nextURL = regex.findall(nextURL)[0]
+        nextURL = regex.findall(nextURL)
+        if nextURL != None:
+            nextURL = nextURL[0]
         if nextURL == firstphotourl:
             nextURL = None
 
@@ -126,8 +128,9 @@ def main(albumURL, size):
     savepath = '.' + os.sep + albumname
 
     allphotolist = []
-
+    print 'start.'
     while True:
+        print 'downloading.'
         nextURL, photolist = parse_html(html, size)
         for photoURL in photolist:
             allphotolist.append(photoURL)
@@ -139,7 +142,8 @@ def main(albumURL, size):
         download_photo(photoURL, savepath)
         print count, '/', total, '\tDone\n'
         count += 1
-        time.sleep(0.2)
+        time.sleep(0.8)
+    print 'finish.'
 
 if __name__ == '__main__':
     argc = len(sys.argv)
